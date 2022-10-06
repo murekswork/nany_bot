@@ -71,9 +71,9 @@ class Database:
 
     def change_birthday_db(self, user_id: int, new_date: str):
         command = f"UPDATE users SET child_birthday = ? WHERE tg_id = ?"
-        self.cursor.execute(command, (user_id, new_date))
+        self.cursor.execute(command, (new_date, user_id))
         self.connection.commit()
-        print('Birthday changed in database!')
+        print(f'Birthday changed in database! to {new_date}')
         return True
 
     def send_advice_db(self, user_id: int, message: str, ticket_date: str) -> dict:

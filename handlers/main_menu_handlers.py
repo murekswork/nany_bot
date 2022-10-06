@@ -8,7 +8,7 @@ from loader import user_data_cache
 
 
 @dp.message_handler(Text(equals='кеш'))
-async def show_cache():
+async def show_cache(message: types.Message):
     print(user_data_cache)
 
 
@@ -29,5 +29,5 @@ async def go_back(message: types.Message):
 
 
 @dp.message_handler(Text(equals='сенд'))
-async def main_algorithm():
+async def main_algorithm(message: types.Message):
     await send_articles()

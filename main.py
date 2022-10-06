@@ -1,7 +1,3 @@
-from handlers.main_menu_handlers import main_algorithm
-from extentions import db
-import asyncio
-
 def run_bot():
     from aiogram import executor
     from handlers import dp
