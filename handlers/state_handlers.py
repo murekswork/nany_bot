@@ -7,7 +7,7 @@ from aiogram.dispatcher import FSMContext
 from FSM.birthday_FSM import FSMInputDate
 from controllers import change_profile_name_controller, change_birthday_controller, send_advice_controller
 from misc.basic_responses import CHANGE_NAME
-from keyboards import main_keyboard
+from keyboards import main_keyboard, send_ticket_keyboard
 
 from loader import user_data_cache
 
@@ -51,7 +51,6 @@ async def change_birthday(message: types.Message, state: FSMContext):
 async def send_advice(message: types.Message):
     await message.answer('Напишите ваше предложение и мы обязательно его рассмотрим')
     await FSMInputDate.ticket_state.set()
-
 
 @dp.message_handler(state=FSMInputDate.ticket_state)
 async def send_advice(message: types.Message, state: FSMContext):

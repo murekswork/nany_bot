@@ -1,4 +1,5 @@
 import sqlite3
+from logger.loger import logger
 
 
 class Database:
@@ -41,8 +42,9 @@ class Database:
 
             self.cursor.execute(command, (user_id, birthday, subscription_end))
             self.connection.commit()
-
+            logger.debug(f'USER:{user_id} - REGISTERED IN DATABASE')
         except sqlite3.IntegrityError:
+            logger.warning(f'USER:{user_id} - ERROR REGISTERING DB', exc_info=True)
             return False
 
         return self.connection.total_changes
@@ -64,17 +66,25 @@ class Database:
         return {'child_birthday': result[0], 'subscription_end': result[1], 'name': result[2]}
 
     def change_profile_name_db(self, new_name: str, user_id: int):
-        command = f"UPDATE users SET name = ? WHERE tg_id = ?"
-        self.cursor.execute(command, (str(new_name), user_id))
-        self.connection.commit()
-        return True
+        try:
+            command = f"UPDATE users SET name = ? WHERE tg_id = ?"
+            self.cursor.execute(command, (str(new_name), user_id))
+            self.connection.commit()
+            logger.debug(f'USER:{user_id} - CHANGED NAME DATABASE')
+            return True
+        except:
+            logger.warning(f'USER:{user_id} - ERROR CHANGE NAME DATABASE', exc_info=True)
 
     def change_birthday_db(self, user_id: int, new_date: str):
-        command = f"UPDATE users SET child_birthday = ? WHERE tg_id = ?"
-        self.cursor.execute(command, (new_date, user_id))
-        self.connection.commit()
-        print(f'Birthday changed in database! to {new_date}')
-        return True
+        try:
+            command = f"UPDATE users SET child_birthday = ? WHERE tg_id = ?"
+            self.cursor.execute(command, (new_date, user_id))
+            self.connection.commit()
+            print(f'Birthday changed in database! to {new_date}')
+            logger.debug(f'USER:{user_id} - CHANGED BIRTHDAY DATABASE')
+            return True
+        except:
+            logger.warning(f'USER:{user_id} - ERROR CHANGE NAME DATABASE', exc_info=True)
 
     def send_advice_db(self, user_id: int, message: str, ticket_date: str) -> dict:
         try:
@@ -91,6 +101,8 @@ class Database:
             self.connection.commit()
             print('New advice ticket added in database!')
             self.cursor.execute(f'SELECT ticket_id FROM tickets WHERE tg_id = "{user_id}" AND date = "{ticket_date}"')
+            logger.debug(f'USER:{user_id} - SEND ADVICE DATABASE')
             return {'success': True, 'ticket_id': self.cursor.fetchone()[0]}
-        except ConnectionError:
+        except:
+            logger.warning(f'USER:{user_id} - ERROR SEND ADVICE DATABASE', exc_info=True)
             return {'success': False}

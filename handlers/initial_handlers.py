@@ -10,7 +10,6 @@ from misc import basic_responses
 from controllers import register_new_user, check_user_exist
 
 
-
 @dp.message_handler(commands='start')
 async def start(message: types.Message):
     user_exist = check_user_exist(message.from_user.id)

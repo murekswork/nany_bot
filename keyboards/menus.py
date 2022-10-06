@@ -3,10 +3,10 @@ from aiogram.types import ReplyKeyboardMarkup
 
 
 def initial_keyboard():
-    start_buttons = ['👶Указать возраст']
+    first_line = ['👶Указать возраст']
 
     keyboard = ReplyKeyboardMarkup(resize_keyboard=True)
-    keyboard.add(*start_buttons)
+    keyboard.add(*first_line)
 
     return keyboard
 
@@ -35,3 +35,13 @@ def change_name_keyboard():
 
     keyboard = ReplyKeyboardMarkup(resize_keyboard=True)
     keyboard.add(*first_line)
+
+    return keyboard
+
+def send_ticket_keyboard():
+    first_line = ['Отправить совет']
+
+    keyboard = ReplyKeyboardMarkup(resize_keyboard=True)
+    keyboard.add(*first_line)
+
+    return keyboard

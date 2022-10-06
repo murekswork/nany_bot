@@ -7,6 +7,7 @@ from utils import calculate_subscription_end
 from config import BASIC_SUBSCRIPTION_LENGTH
 from loader import user_data_cache, bot
 from models import create_article_model, create_user_model
+from logger.loger import logger
 
 
 def check_user_exist(user_id):
@@ -37,6 +38,8 @@ def apply_for_registration(message: types.Message) -> (dict or bool):
     birthday = datetime_to_str(birth_date_datetime)
     subscription_end = datetime_to_str(subscription_end_date)
 
+    logger.debug(f'USER:{user_id} - REGISTERED')
+
     return {'user_id': user_id, 'birthday': birthday, 'subscription_end': subscription_end}
 
 
@@ -50,6 +53,7 @@ def register_new_user(message: types.Message) -> (dict or bool):
     """
 
     handled_results = apply_for_registration(message)
+    logger.debug(f'USER:{message.from_user.id}-START REGISTER')
     if not handled_results:
         return {'success': False, 'text': "Дата введена в неверном формате. "
                                           "Пожалуйста, введите дату в формате день.месяц.год (13.01.2022)"}
@@ -67,6 +71,7 @@ def change_profile_name_controller(new_name: types.Message, user_id: types.messa
     print(new_name)
     if new_name != '' and new_name is not None:
         if db.change_profile_name_db(new_name, user_id) is True:
+            logger.debug(f'USER:{user_id} - CHANGED NAME')
             return {'success': True}
     else:
         return {'success': False}
@@ -83,6 +88,7 @@ def change_birthday_controller(date: str, user_id: int) -> dict:
     if not date_changed:
         return {'success': False, 'text': 'Ошибка, повторите позднее'}
     user_data_cache[user_id]['child_birthday'] = correct_date
+    logger.debug(f'USER:{user_id} - CHANGED BIRTHDAY')
     return {'success': True}
 
 
@@ -90,6 +96,7 @@ def send_advice_controller(user_id: int, message: str, ticket_date) -> (dict or 
     message_text = str(message)
     result = db.send_advice_db(user_id, message_text, ticket_date)
     if result['success'] is True:
+        logger.debug(f'USER:{user_id} - SENT ADVICE')
         return {'success': True, 'ticket_id': result['ticket_id']}
     else:
         return {'success': False, 'text': 'Проблема с базой данных, повторите позднее'}
@@ -102,7 +109,7 @@ async def send_articles():
         for user in user_model_list:
             if article.age == user.age:
                 await send_article_to_user(user.id, article)
-
+    logger.warning('SENT DAILY ARTICLES')
 
 async def send_article_to_user(user_id, article):
     await bot.send_message(user_id, f'{article.topic}\n{article.url}')
