@@ -1,11 +1,13 @@
 from extentions import db
 import datetime
 
+from logger.loger import logger
+
 
 class Article:
 
     def __init__(self, id, topic, url, age):
-        self.age = id
+        self.id = id
         self.topic = topic
         self.url = url
         self.age = age
@@ -13,9 +15,10 @@ class Article:
 
 class User:
 
-    def __init__(self, id, birthday):
+    def __init__(self, id, birthday, subscription):
         self.id = id
         self.age = self.get_date_subtract(birthday)
+        self.check_subscription = self.check_subscription(subscription)
 
     @staticmethod
     def get_date_subtract(birth_date):
@@ -25,6 +28,14 @@ class User:
         delta = (today - birth_date).days
         return delta
 
+    @staticmethod
+    def check_subscription(subscription):
+        dateformat = '%d.%m.%Y'
+        subscription_date = datetime.datetime.strptime(subscription, dateformat)
+        if subscription_date > datetime.datetime.today():
+            return 'ACTIVE'
+        else:
+            return 'EXPIRED'
 
 def create_article_model():
 
@@ -47,6 +58,7 @@ def create_user_model():
     for user in all_users:
         user_models.append(User(
             id=user[0],
-            birthday=user[1]
+            birthday=user[1],
+            subscription=user[2]
         ))
     return user_models

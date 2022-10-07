@@ -30,7 +30,7 @@ class Database:
         This function returns dict with users id and users birthday
         :return:
         """
-        command = f'SELECT tg_id, child_birthday FROM users'
+        command = f'SELECT tg_id, child_birthday, subscription_end FROM users'
         self.cursor.execute(command)
         user_list = self.cursor.fetchall()
         return user_list

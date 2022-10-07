@@ -38,8 +38,3 @@ async def state1(message: types.Message, state: FSMContext):
         else:
             await message.answer(basic_responses.REGISTRATION_SUCCESSFULL, reply_markup=main_keyboard())
             await state.finish()
-
-
-
-# irst_line = ['Профиль', 'Библиотека']
-#     second_line = ['Помочь советом', 'Связь']

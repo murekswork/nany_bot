@@ -1,4 +1,3 @@
-from aiogram import types
 from aiogram.types import ReplyKeyboardMarkup
 
 
@@ -39,7 +38,7 @@ def change_name_keyboard():
     return keyboard
 
 def send_ticket_keyboard():
-    first_line = ['Отправить совет']
+    first_line = ['Отправить совет', 'Назад']
 
     keyboard = ReplyKeyboardMarkup(resize_keyboard=True)
     keyboard.add(*first_line)

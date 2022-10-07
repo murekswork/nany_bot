@@ -130,4 +130,7 @@ dmypy.json
 
 #Database files
 .db/
-.db
+*.db
+
+#Configs
+config.py

@@ -107,7 +107,7 @@ async def send_articles():
     article_model_list = create_article_model()
     for article in article_model_list:
         for user in user_model_list:
-            if article.age == user.age:
+            if article.age == user.age and user.check_subscription() == 'ACTIVE':
                 await send_article_to_user(user.id, article)
     logger.warning('SENT DAILY ARTICLES')
 

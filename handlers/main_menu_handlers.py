@@ -1,10 +1,11 @@
 from . import dp
 from aiogram.dispatcher.filters import Text
 from aiogram import types
-from keyboards import profile_keyboard, main_keyboard
+from keyboards import profile_keyboard, main_keyboard, send_ticket_keyboard
 from controllers import get_user_profile, send_articles
 
 from loader import user_data_cache
+from config import admin_contact
 
 
 @dp.message_handler(Text(equals='кеш'))
@@ -23,9 +24,19 @@ async def profile(message: types.Message):
     await message.answer(text, reply_markup=profile_keyboard())
 
 
+@dp.message_handler(Text(equals='Помочь советом'))
+async def send_ticket_menu(message: types.Message):
+    await message.answer('Отправить совет или назад', reply_markup=send_ticket_keyboard())
+
+
 @dp.message_handler(Text(equals='Назад'))
 async def go_back(message: types.Message):
     await message.answer("Главное меню", reply_markup=main_keyboard())
+
+
+@dp.message_handler(Text(equals='Связь'))
+async def contact_admin(message: types.Message):
+    await message.answer(f'Для связи с администратором используйте этот контакт: {admin_contact}')
 
 
 @dp.message_handler(Text(equals='сенд'))
