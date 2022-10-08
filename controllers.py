@@ -113,3 +113,9 @@ async def send_articles():
 
 async def send_article_to_user(user_id, article):
     await bot.send_message(user_id, f'{article.topic}\n{article.url}')
+
+async def check_admin(user_id):
+    if user_id == 631620578:
+        return True
+
+

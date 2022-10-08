@@ -13,7 +13,7 @@ from controllers import register_new_user, check_user_exist
 @dp.message_handler(commands='start')
 async def start(message: types.Message):
     user_exist = check_user_exist(message.from_user.id)
-    if user_exist['result']:
+    if user_exist['result'] is True:
         await message.answer(user_exist['text'], reply_markup=main_keyboard())
     else:
         await message.answer('Привет! Я постараюсь помочь тебе в уходе за малышом и в его воспитании!\nДля'
@@ -23,10 +23,13 @@ async def start(message: types.Message):
 
 @dp.message_handler(Text(equals='👶Указать возраст'))
 async def set_child_birthday(message: types.Message):
-
-    await message.answer(basic_responses.SET_BIRTHDAY)
-    await message.answer('Введите дату:', reply_markup=None)
-    await FSMInputDate.date.set()
+    user_exist = check_user_exist(message.from_user.id)
+    if user_exist['result'] is True:
+        await message.answer('Вы уже зарегистрированы', reply_markup=main_keyboard())
+    else:
+        await message.answer(basic_responses.SET_BIRTHDAY)
+        await message.answer('Введите дату:', reply_markup=None)
+        await FSMInputDate.date.set()
 
 
 @dp.message_handler(state=FSMInputDate.date)

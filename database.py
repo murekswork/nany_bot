@@ -106,3 +106,7 @@ class Database:
         except:
             logger.warning(f'USER:{user_id} - ERROR SEND ADVICE DATABASE', exc_info=True)
             return {'success': False}
+
+
+
+

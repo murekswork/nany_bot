@@ -2,7 +2,7 @@ from . import dp
 from aiogram.dispatcher.filters import Text
 from aiogram import types
 from keyboards import profile_keyboard, main_keyboard, send_ticket_keyboard
-from controllers import get_user_profile, send_articles
+from controllers import get_user_profile, send_articles, check_admin
 
 from loader import user_data_cache
 from config import admin_contact
@@ -10,7 +10,10 @@ from config import admin_contact
 
 @dp.message_handler(Text(equals='кеш'))
 async def show_cache(message: types.Message):
-    print(user_data_cache)
+    if await check_admin(message.from_user.id) is True:
+        print(user_data_cache)
+    else:
+        await message.answer('Не балуйся)')
 
 
 @dp.message_handler(Text(equals='Профиль'))
@@ -39,6 +42,15 @@ async def contact_admin(message: types.Message):
     await message.answer(f'Для связи с администратором используйте этот контакт: {admin_contact}')
 
 
+@dp.message_handler(Text(equals='Библиотека'))
+async def library_menu(message: types.Message):
+    await message.answer('Этот раздел пока недоступен', reply_markup=main_keyboard())
+
+
+
 @dp.message_handler(Text(equals='сенд'))
 async def main_algorithm(message: types.Message):
-    await send_articles()
+    if await check_admin(message.from_user.id) is True:
+        await send_articles()
+    else:
+        await message.answer('Не балуйся)')
